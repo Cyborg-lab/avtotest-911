@@ -13,7 +13,7 @@ async def start(message: types.Message):
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(
             text="🚗 Testni boshlash",
-            web_app=WebAppInfo(url="https://avtotest-911.vercel.app/")
+            web_app=WebAppInfo(url="https://avtotest-uz.vercel.app/")
         )]
     ])
     await message.answer("Avtotestni boshlash uchun tugmani bosing 👇", reply_markup=keyboard)
