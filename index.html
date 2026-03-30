@@ -1,118 +1,643 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AvtoTest911</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Avto-Lider | Bilim testi</title>
+    <!-- Telegram WebApp Script -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-<style>
-body {
-    font-family: Arial;
-    padding: 20px;
-    background: #f5f5f5;
-}
-.card {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-}
-button {
-    display: block;
-    margin-top: 10px;
-    padding: 10px;
-    width: 100%;
-    border: none;
-    border-radius: 8px;
-    background: #2b7cff;
-    color: white;
-    font-size: 16px;
-}
-</style>
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, 'Inter', 'Roboto', sans-serif;
+            background: var(--tg-theme-bg-color, #f0f2f5);
+            color: var(--tg-theme-text-color, #1a1e2b);
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.2s ease;
+        }
 
+        /* Avto-Lider premium uslubi */
+        .main-container {
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        /* Header stil */
+        .brand-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #E31E24 0%, #B01016 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .badge {
+            background: rgba(227, 30, 36, 0.12);
+            backdrop-filter: blur(4px);
+            padding: 6px 14px;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--tg-theme-link-color, #E31E24);
+            border: 0.5px solid rgba(227,30,36,0.3);
+        }
+
+        /* Kartochka */
+        .quiz-card {
+            background: var(--tg-theme-secondary-bg-color, #ffffff);
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0,0,0,0.02);
+            overflow: hidden;
+            padding: 28px 24px;
+            transition: all 0.2s;
+            backdrop-filter: blur(0px);
+            border: 1px solid var(--tg-theme-hint-color, rgba(0,0,0,0.05));
+        }
+
+        /* Progress */
+        .progress-area {
+            margin-bottom: 28px;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--tg-theme-hint-color, #5e6873);
+        }
+
+        .progress-bar-bg {
+            background: var(--tg-theme-bg-color, #e9eef3);
+            border-radius: 60px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #E31E24, #F15A24);
+            width: 0%;
+            height: 100%;
+            border-radius: 60px;
+            transition: width 0.3s ease;
+        }
+
+        /* Savol matni */
+        .question-text {
+            font-size: 1.65rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 32px;
+            color: var(--tg-theme-text-color, #0b1a2f);
+            letter-spacing: -0.3px;
+        }
+
+        /* Javoblar */
+        .answers-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .answer-btn {
+            background: var(--tg-theme-bg-color, #f8fafd);
+            border: 1.5px solid var(--tg-theme-hint-color, #e2e8f0);
+            border-radius: 20px;
+            padding: 16px 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: left;
+            color: var(--tg-theme-text-color, #1a2634);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background-color: var(--tg-theme-secondary-bg-color, #ffffff);
+        }
+
+        .answer-btn:hover {
+            transform: scale(0.99);
+            background: var(--tg-theme-bg-color, #f1f5f9);
+        }
+
+        .answer-marker {
+            width: 28px;
+            height: 28px;
+            background: var(--tg-theme-hint-color, #eef2f6);
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #5a6874;
+            transition: all 0.2s;
+        }
+
+        .answer-btn.active-opt .answer-marker {
+            background: #E31E24;
+            color: white;
+        }
+
+        /* Indikator va tugma */
+        .next-btn {
+            width: 100%;
+            background: linear-gradient(95deg, #E31E24, #c81a1f);
+            border: none;
+            border-radius: 60px;
+            padding: 16px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 12px;
+            box-shadow: 0 6px 14px rgba(227, 30, 36, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .next-btn:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .next-btn:disabled {
+            opacity: 0.6;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        /* Natija sahifasi */
+        .result-card {
+            text-align: center;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(145deg, #fef2f2, #ffe6e6);
+            border-radius: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            flex-direction: column;
+            border: 4px solid #E31E24;
+            box-shadow: 0 12px 25px rgba(227,30,36,0.2);
+        }
+
+        .score-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #E31E24;
+            line-height: 1;
+        }
+
+        .score-total {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #6c7a8e;
+        }
+
+        .result-message {
+            font-size: 1.2rem;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+
+        .send-btn {
+            background: #1f2a48;
+            margin-top: 16px;
+            background: linear-gradient(95deg, #1e293b, #0f172a);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+        }
+
+        .restart-btn {
+            background: #334155;
+            margin-top: 12px;
+            box-shadow: none;
+            background: var(--tg-theme-bg-color, #eef2ff);
+            color: var(--tg-theme-text-color, #1e293b);
+            border: 1px solid var(--tg-theme-hint-color, #cbd5e1);
+        }
+
+        /* animatsiya */
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-slide {
+            animation: fadeSlide 0.3s ease forwards;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.7rem;
+            color: var(--tg-theme-hint-color, #8e9aaf);
+        }
+    </style>
 </head>
 <body>
+<div class="main-container">
+    <div class="brand-header">
+        <div class="logo">
+            <span class="logo-icon">🚗⚡</span>
+            <span class="logo-text">AVTO-LIDER</span>
+        </div>
+        <div class="badge">🏁 TEST SERIYA 2025</div>
+    </div>
 
-<div class="card">
-    <h3 id="question">Savol yuklanmoqda...</h3>
-    <div id="answers"></div>
+    <div id="quizAppContainer">
+        <!-- Dinamik content yuklanadi -->
+        <div class="quiz-card" id="dynamicCard">
+            <div style="text-align:center; padding:40px;">Yuklanmoqda...</div>
+        </div>
+    </div>
+    <footer>Avto-Lider | Yo‘l harakati intellekt klubi</footer>
 </div>
 
 <script>
-const tg = window.Telegram.WebApp;
-tg.expand();
-
-// TEST SAVOLLAR
-const questions = [
-    {
-        q: "Svetoforning qizil chirog‘i nimani bildiradi?",
-        a: ["To‘xtash", "Yurish", "Sekinlashish"],
-        correct: 0
-    },
-    {
-        q: "Piyodalar qayerdan o‘tishi kerak?",
-        a: ["Istalgan joydan", "Zebra orqali", "Yo‘l o‘rtasidan"],
-        correct: 1
-    },
-    {
-        q: "Tezlik belgisi 60 nimani bildiradi?",
-        a: ["Minimum tezlik", "Maksimal tezlik 60", "To‘xtash"],
-        correct: 1
-    }
-];
-
-let current = 0;
-let score = 0;
-
-function loadQuestion() {
-    if (current >= questions.length) {
-        finishTest();
-        return;
-    }
-
-    const q = questions[current];
-    document.getElementById("question").innerText = q.q;
-
-    const answersDiv = document.getElementById("answers");
-    answersDiv.innerHTML = "";
-
-    q.a.forEach((ans, index) => {
-        const btn = document.createElement("button");
-        btn.innerText = ans;
-        btn.onclick = () => checkAnswer(index);
-        answersDiv.appendChild(btn);
-    });
-}
-
-function checkAnswer(index) {
-    if (index === questions[current].correct) {
-        score++;
-    }
-    current++;
-    loadQuestion();
-}
-
-function finishTest() {
-    document.body.innerHTML = `
-        <div class="card">
-            <h2>Natija</h2>
-            <p>Siz ${score} / ${questions.length} to‘g‘ri topdingiz</p>
-            <button onclick="sendResult()">Natijani botga yuborish</button>
-        </div>
-    `;
-}
-
-function sendResult() {
-    tg.sendData(JSON.stringify({
-        type: "result",
-        score: score,
-        total: questions.length,
-        user: tg.initDataUnsafe.user
-    }));
-}
+    // ---------- AVTO-LIDER TELEGRAM WEB APP ----------
+    const tg = window.Telegram.WebApp;
+    tg.expand();  // to‘liq ekran
+    tg.enableClosingConfirmation();  // chiqishda tasdiqlash (qulay)
     
-loadQuestion();
-</script>
+    // ---------- TEST MA'LUMOTLARI (kengaytirilgan, avto-lider ruhida) ----------
+    const questions = [
+        {
+            q: "Qaysi belgi harakatlanish taqiqlangan yo‘lni bildiradi?",
+            a: ["Kirish taqiqlangan", "To‘xtash joyi", "Avtomagistral"],
+            correct: 0,
+            explanation: "Kirish taqiqlangan belgisi — dumaloq, qizil hoshiyali oq fon."
+        },
+        {
+            q: "Svetoforning qizil chirog‘i nimani bildiradi?",
+            a: ["To‘xtash", "Harakatlanish", "Tayyorlanish"],
+            correct: 0,
+            explanation: "Qizil chiroq — to‘xtash shart, yo‘l kesishmasidan o‘tish mumkin emas."
+        },
+        {
+            q: "Piyodalar qayerdan o‘tishi kerak?",
+            a: ["Istalgan joydan", "Piyodalar o‘tish joyi (zebra)", "Yo‘lning chap tomonidan"],
+            correct: 1,
+            explanation: "Faqat belgilangan piyodalar o‘tish joyidan, yerusti yoki yerosti o‘tishlardan."
+        },
+        {
+            q: "Tezlik belgisi 60 nimani anglatadi?",
+            a: ["Minimal tezlik 60 km/h", "Maksimal tezlik 60 km/h", "Tavsiya etilgan tezlik"],
+            correct: 1,
+            explanation: "Dumaloq ko‘k fonda oq raqam — maksimal tezlik cheklovi."
+        },
+        {
+            q: "Qaysi holatda haydovchi o‘ng tomondan transport vositasini bosib o‘tishi mumkin?",
+            a: ["Har doim", "Agar chap qatnov band bo‘lsa", "Faqat qayta qurish va yo‘l belgilari ruxsat bersa"],
+            correct: 2,
+            explanation: "O‘ngdan bosib o‘tish faqat xavfsizlik va belgilar ruxsat etilganda."
+        },
+        {
+            q: "Mashinada favqulodda to‘xtash belgisi qanday masofada qo‘yiladi?",
+            a: ["5 metr", "15 metr va undan uzoq", "50 metr"],
+            correct: 1,
+            explanation: "Aholi punktida kamida 15 m, tashqarisida 30-40 m masofada."
+        }
+    ];
 
+    // test holati
+    let currentIndex = 0;
+    let userAnswers = new Array(questions.length).fill(null);  // tanlangan indeks
+    let score = 0;
+
+    // DOM elementlar
+    const container = document.getElementById("quizAppContainer");
+    
+    // Progress va UI yangilash
+    function renderCurrentQuestion() {
+        if (currentIndex >= questions.length) {
+            renderResultScreen();
+            return;
+        }
+        
+        const qData = questions[currentIndex];
+        const selectedOpt = userAnswers[currentIndex];
+        
+        // javoblar html
+        let answersHtml = '';
+        qData.a.forEach((answer, idx) => {
+            const isActive = (selectedOpt === idx);
+            const activeClass = isActive ? 'active-opt' : '';
+            answersHtml += `
+                <div class="answer-btn ${activeClass}" data-opt-index="${idx}">
+                    <span class="answer-marker">${String.fromCharCode(65+idx)}</span>
+                    <span class="answer-text">${escapeHtml(answer)}</span>
+                </div>
+            `;
+        });
+        
+        const totalQuestions = questions.length;
+        const currentNum = currentIndex + 1;
+        const progressPercent = ((currentIndex) / totalQuestions) * 100;
+        
+        const cardHtml = `
+            <div class="quiz-card fade-slide">
+                <div class="progress-area">
+                    <div class="progress-stats">
+                        <span>🚦 Savol ${currentNum} / ${totalQuestions}</span>
+                        <span>⭐ To‘g‘ri: ${score}</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-fill" style="width: ${progressPercent}%;"></div>
+                    </div>
+                </div>
+                <div class="question-text">
+                    ${escapeHtml(qData.q)}
+                </div>
+                <div class="answers-grid" id="answersGrid">
+                    ${answersHtml}
+                </div>
+                <button class="next-btn" id="nextBtn">
+                    ${currentIndex === totalQuestions-1 ? "✅ TESTNI TUGATISH" : "➡ KEYINGI SAVOL"}
+                </button>
+            </div>
+        `;
+        
+        container.innerHTML = cardHtml;
+        
+        // Javob tugmalariga event listener
+        const answerBtns = document.querySelectorAll('.answer-btn');
+        answerBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const optIndex = parseInt(btn.getAttribute('data-opt-index'));
+                // agar shu savolga oldin javob berilmagan yoki o'zgartirsa
+                if (userAnswers[currentIndex] !== optIndex) {
+                    // eski tanlov bo'lsa, ballni qayta hisoblash kerak
+                    const prevOpt = userAnswers[currentIndex];
+                    // Agar oldin to'g'ri tanlagan bo'lsa, ballni kamaytiramiz
+                    if (prevOpt !== null && prevOpt === qData.correct) {
+                        score--;
+                    }
+                    // Yangi tanlov
+                    userAnswers[currentIndex] = optIndex;
+                    // Agar yangi tanlov to'g'ri bo'lsa ball oshiramiz
+                    if (optIndex === qData.correct) {
+                        score++;
+                    }
+                    // UI dagi aktiv classlarni yangilash
+                    updateActiveStyles(currentIndex);
+                }
+            });
+        });
+        
+        // Next tugmasi
+        const nextBtn = document.getElementById('nextBtn');
+        nextBtn.addEventListener('click', () => {
+            // agar javob tanlanmagan bo'lsa, ogohlantirish (Telegram uslubida)
+            if (userAnswers[currentIndex] === null) {
+                // vibro va xabar
+                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+                showTemporaryToast("Iltimos, javobni tanlang!", "#E31E24");
+                return;
+            }
+            // haptic feedback
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            // keyingi savolga o'tish
+            currentIndex++;
+            renderCurrentQuestion();
+        });
+    }
+    
+    // Barcha javob tugmalaridagi active classni yangilash (faqat hozirgi savol)
+    function updateActiveStyles(questionIdx) {
+        const selected = userAnswers[questionIdx];
+        const btns = document.querySelectorAll('.answer-btn');
+        btns.forEach((btn, idx) => {
+            const optVal = parseInt(btn.getAttribute('data-opt-index'));
+            if (selected === optVal) {
+                btn.classList.add('active-opt');
+            } else {
+                btn.classList.remove('active-opt');
+            }
+        });
+    }
+    
+    // Xabarni chiqarish (toast)
+    function showTemporaryToast(msg, bgColor = "#E31E24") {
+        let toast = document.createElement('div');
+        toast.innerText = msg;
+        toast.style.position = 'fixed';
+        toast.style.bottom = '30px';
+        toast.style.left = '20px';
+        toast.style.right = '20px';
+        toast.style.backgroundColor = bgColor;
+        toast.style.color = 'white';
+        toast.style.padding = '12px 16px';
+        toast.style.borderRadius = '40px';
+        toast.style.fontWeight = '600';
+        toast.style.textAlign = 'center';
+        toast.style.zIndex = '999';
+        toast.style.boxShadow = '0 8px 20px rgba(0,0,0,0.2)';
+        toast.style.fontSize = '0.9rem';
+        toast.style.backdropFilter = 'blur(8px)';
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 2000);
+    }
+    
+    // Natija ekrani (Avto-Lider uslubida)
+    function renderResultScreen() {
+        const total = questions.length;
+        const percent = Math.round((score / total) * 100);
+        let statusMessage = "";
+        if (percent === 100) statusMessage = "🏆 MUTLAQ LIDER! Mukammal natija!";
+        else if (percent >= 80) statusMessage = "🚗 KATTA LIDER! Yaxshi bilim!";
+        else if (percent >= 60) statusMessage = "📘 Yaxshi, biroz takrorlash kerak";
+        else statusMessage = "⚠️ Qayta tayyorgarlik o‘tish tavsiya etiladi";
+        
+        const cardHtml = `
+            <div class="quiz-card result-card fade-slide">
+                <div class="logo" style="justify-content:center; margin-bottom:10px;">
+                    <span class="logo-icon">🏁📋</span>
+                </div>
+                <h2 style="font-size:1.8rem; margin-bottom:8px;">Avto-Lider</h2>
+                <div class="score-circle">
+                    <div class="score-number">${score}</div>
+                    <div class="score-total">/${total}</div>
+                </div>
+                <div class="result-message">${statusMessage}</div>
+                <p style="background: var(--tg-theme-bg-color, #f1f5f9); padding: 12px; border-radius: 20px; font-size:0.9rem;">
+                    ✅ To‘g‘ri javoblar: ${score} / ${total} <br>
+                    📊 Foiz ko‘rsatkichi: ${percent}%
+                </p>
+                <button class="next-btn send-btn" id="sendToBotBtn">📨 Natijani botga yuborish</button>
+                <button class="next-btn restart-btn" id="restartTestBtn">🔄 Testni qayta boshlash</button>
+                <div style="margin-top: 20px; font-size:12px; opacity:0.7;">Avto-Lider intellektual klubi</div>
+            </div>
+        `;
+        container.innerHTML = cardHtml;
+        
+        // Natijani botga yuborish
+        const sendBtn = document.getElementById('sendToBotBtn');
+        if (sendBtn) {
+            sendBtn.addEventListener('click', () => {
+                sendResultToBot();
+                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+                showTemporaryToast("Natija yuborildi! ✅", "#2c7a4d");
+            });
+        }
+        
+        const restartBtn = document.getElementById('restartTestBtn');
+        if (restartBtn) {
+            restartBtn.addEventListener('click', () => {
+                resetTest();
+                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+            });
+        }
+    }
+    
+    // Testni to'liq reset qilish
+    function resetTest() {
+        currentIndex = 0;
+        userAnswers = new Array(questions.length).fill(null);
+        score = 0;
+        renderCurrentQuestion();
+    }
+    
+    // NATIJANI BOTGA JO'NATISH (Telegram WebApp sendData)
+    function sendResultToBot() {
+        const total = questions.length;
+        const percent = Math.round((score / total) * 100);
+        const user = tg.initDataUnsafe?.user || {};
+        const firstName = user.first_name || "AvtoLiderUser";
+        const lastName = user.last_name || "";
+        const username = user.username || "";
+        
+        const resultPayload = {
+            type: "avto_lider_test_result",
+            score: score,
+            total: total,
+            percent: percent,
+            user: {
+                id: user.id,
+                first_name: firstName,
+                last_name: lastName,
+                username: username,
+                language_code: user.language_code
+            },
+            timestamp: new Date().toISOString(),
+            test_title: "Avto-Lider bilim testi"
+        };
+        
+        // Qo'shimcha qulaylik: har bir savolga berilgan javoblar tahlili (ixtiyoriy)
+        const detailed = [];
+        for (let i = 0; i < questions.length; i++) {
+            detailed.push({
+                question: questions[i].q,
+                selected: userAnswers[i] !== null ? questions[i].a[userAnswers[i]] : "Javob berilmagan",
+                is_correct: (userAnswers[i] === questions[i].correct),
+                correct_answer: questions[i].a[questions[i].correct]
+            });
+        }
+        resultPayload.details = detailed;
+        
+        try {
+            tg.sendData(JSON.stringify(resultPayload));
+            // Agar bot 'web_app_data' ni qabul qilsa, ma'lumot jo'natiladi.
+            // Qo'shimcha: main buttonni yashirish shart emas, faqat sendData yetarli.
+        } catch(e) {
+            console.warn("sendData error", e);
+            showTemporaryToast("Xatolik: ma'lumot jo‘natilmadi", "#c2410c");
+        }
+        
+        // Telegram WebAppda main button yopilmasligi uchun qo'shimcha, lekin sendData ishlaydi
+        // Opsional: Botga popup xabar ko'rsatish
+        if (tg.showPopup) {
+            tg.showPopup({
+                title: "Avto-Lider",
+                message: `Natijangiz: ${score}/${total} (${percent}%). Yuborildi!`,
+                buttons: [{type: "ok"}]
+            });
+        }
+    }
+    
+    // XSS himoya uchun oddiy escape
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+    
+    // Tema moslash (Telegram tema ranglari)
+    function applyTelegramTheme() {
+        const themeParams = tg.themeParams;
+        if (themeParams) {
+            const root = document.documentElement;
+            root.style.setProperty('--tg-theme-bg-color', themeParams.bg_color || '#f0f2f5');
+            root.style.setProperty('--tg-theme-text-color', themeParams.text_color || '#1a1e2b');
+            root.style.setProperty('--tg-theme-hint-color', themeParams.hint_color || '#5e6873');
+            root.style.setProperty('--tg-theme-link-color', themeParams.link_color || '#E31E24');
+            root.style.setProperty('--tg-theme-secondary-bg-color', themeParams.secondary_bg_color || '#ffffff');
+        }
+        // body fonni moslashtirish
+        document.body.style.backgroundColor = 'var(--tg-theme-bg-color, #f0f2f5)';
+    }
+    
+    // boshlash
+    applyTelegramTheme();
+    // dastlabki yuklash
+    renderCurrentQuestion();
+    
+    // Telegram ready
+    tg.ready();
+</script>
 </body>
 </html>
