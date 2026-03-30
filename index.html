@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AvtoTest911</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+body {
+    font-family: Arial;
+    padding: 20px;
+    background: #f5f5f5;
+}
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+}
+button {
+    display: block;
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    background: #2b7cff;
+    color: white;
+    font-size: 16px;
+}
+</style>
+
+</head>
+<body>
+
+<div class="card">
+    <h3 id="question">Savol yuklanmoqda...</h3>
+    <div id="answers"></div>
+</div>
+
+<script>
+const tg = window.Telegram.WebApp;
+tg.expand();
+
+// TEST SAVOLLAR
+const questions = [
+    {
+        q: "Svetoforning qizil chirog‘i nimani bildiradi?",
+        a: ["To‘xtash", "Yurish", "Sekinlashish"],
+        correct: 0
+    },
+    {
+        q: "Piyodalar qayerdan o‘tishi kerak?",
+        a: ["Istalgan joydan", "Zebra orqali", "Yo‘l o‘rtasidan"],
+        correct: 1
+    },
+    {
+        q: "Tezlik belgisi 60 nimani bildiradi?",
+        a: ["Minimum tezlik", "Maksimal tezlik 60", "To‘xtash"],
+        correct: 1
+    }
+];
+
+let current = 0;
+let score = 0;
+
+function loadQuestion() {
+    if (current >= questions.length) {
+        finishTest();
+        return;
+    }
+
+    const q = questions[current];
+    document.getElementById("question").innerText = q.q;
+
+    const answersDiv = document.getElementById("answers");
+    answersDiv.innerHTML = "";
+
+    q.a.forEach((ans, index) => {
+        const btn = document.createElement("button");
+        btn.innerText = ans;
+        btn.onclick = () => checkAnswer(index);
+        answersDiv.appendChild(btn);
+    });
+}
+
+function checkAnswer(index) {
+    if (index === questions[current].correct) {
+        score++;
+    }
+    current++;
+    loadQuestion();
+}
+
+function finishTest() {
+    document.body.innerHTML = `
+        <div class="card">
+            <h2>Natija</h2>
+            <p>Siz ${score} / ${questions.length} to‘g‘ri topdingiz</p>
+            <button onclick="sendResult()">Natijani botga yuborish</button>
+        </div>
+    `;
+}
+
+function sendResult() {
+    tg.sendData(JSON.stringify({
+        type: "result",
+        score: score,
+        total: questions.length,
+        user: tg.initDataUnsafe.user
+    }));
+}
+    
+loadQuestion();
+</script>
+
+</body>
+</html>
